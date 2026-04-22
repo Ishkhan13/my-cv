@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishkhan Abroyan — CV</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --bg2: #111114;
+    --bg3: #18181c;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0ede8;
+    --muted: #7a7876;
+    --accent: #a8c97f;
+    --accent2: #6da44e;
+    --tag-bg: rgba(168,201,127,0.1);
+    --tag-text: #a8c97f;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  body { cursor: none; }
+  #cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  #cursor-ring {
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid rgba(168,201,127,0.4);
+    border-radius: 50%; pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.25s ease, width 0.2s, height 0.2s;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(12,12,14,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(80px, 18vw, 260px);
+    color: rgba(255,255,255,0.02);
+    white-space: nowrap; pointer-events: none;
+    letter-spacing: -0.04em; line-height: 1;
+    user-select: none;
+  }
+
+  .hero-label {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95; letter-spacing: -0.03em;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-name .line2 { color: var(--accent); }
+
+  .hero-subtitle {
+    margin-top: 2rem;
+    font-size: 0.8rem; color: var(--muted);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-contacts {
+    display: flex; flex-wrap: wrap; gap: 1.5rem;
+    margin-top: 3rem;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .hero-contact-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; color: var(--muted);
+  }
+  .hero-contact-item::before {
+    content: '→'; color: var(--accent); font-size: 0.65rem;
+  }
+
+  .hero-scroll {
+    position: absolute; right: 3rem; bottom: 3rem;
+    writing-mode: vertical-rl;
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted);
+    animation: fadeIn 1s 1.2s forwards; opacity: 0;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block; width: 1px; height: 40px;
+    background: var(--muted); margin: 0.75rem auto 0;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; position: relative; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 3.5rem;
+  }
+  .section-num {
+    font-size: 0.6rem; color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    letter-spacing: -0.02em;
+  }
+  .section-line {
+    flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── PROFIEL ── */
+  .profiel-text {
+    max-width: 680px;
+    font-size: 1rem; line-height: 1.85;
+    color: rgba(240,237,232,0.75);
+  }
+  .profiel-text strong { color: var(--accent); font-weight: 500; }
+
+  .subsidy-box {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    margin-top: 2.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgba(168,201,127,0.3);
+    background: rgba(168,201,127,0.06);
+    border-radius: 4px;
+    font-size: 0.72rem; color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .subsidy-box::before { content: '✦'; font-size: 0.6rem; }
+
+  /* ── SKILLS GRID ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .skill-card {
+    background: var(--bg2);
+    padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .skill-card:hover { background: var(--bg3); }
+  .skill-card-label {
+    font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .skill-tag {
+    padding: 0.3rem 0.65rem;
+    background: var(--tag-bg); color: var(--tag-text);
+    font-size: 0.68rem; letter-spacing: 0.05em;
+    border: 1px solid rgba(168,201,127,0.2);
+    border-radius: 2px;
+  }
+
+  /* ── ERVARING ── */
+  .jobs { display: flex; flex-direction: column; gap: 0; }
+  .job {
+    display: grid; grid-template-columns: 160px 1fr;
+    gap: 0 2.5rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .job.visible { opacity: 1; transform: translateY(0); }
+  .job-period {
+    font-size: 0.65rem; letter-spacing: 0.12em;
+    color: var(--muted); padding-top: 0.3rem;
+    text-transform: uppercase;
+  }
+  .job-title {
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 1.15rem; letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+  .job-company {
+    font-size: 0.72rem; color: var(--accent);
+    letter-spacing: 0.06em; margin-bottom: 1rem;
+  }
+  .job-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .job-bullets li {
+    font-size: 0.8rem; color: rgba(240,237,232,0.6);
+    padding-left: 1rem; position: relative;
+  }
+  .job-bullets li::before {
+    content: '—'; position: absolute; left: 0;
+    color: var(--accent); font-size: 0.65rem;
+  }
+
+  /* ── TALEN ── */
+  .langs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  .lang-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .lang-card:hover { border-color: var(--border2); }
+  .lang-name {
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 1rem; margin-bottom: 0.25rem;
+  }
+  .lang-level {
+    font-size: 0.65rem; color: var(--accent);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .lang-bar-bg {
+    height: 2px; background: var(--border2);
+    width: 100%; border-radius: 1px;
+  }
+  .lang-bar-fill {
+    height: 2px; background: var(--accent);
+    border-radius: 1px;
+    transition: width 1s 0.3s ease;
+  }
+
+  /* ── OPLEIDING ── */
+  .edu-list { display: flex; flex-direction: column; gap: 0; }
+  .edu-item {
+    display: grid; grid-template-columns: 160px 1fr;
+    gap: 0 2.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .edu-year { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; padding-top: 0.2rem; }
+  .edu-name {
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.95rem; margin-bottom: 0.2rem;
+  }
+  .edu-inst { font-size: 0.72rem; color: var(--muted); }
+
+  /* ── CONTACT FOOTER ── */
+  .contact-section {
+    background: var(--bg2);
+    padding: 5rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 2rem;
+  }
+  .contact-heading {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .contact-heading span { color: var(--accent); }
+  .contact-details { display: flex; flex-direction: column; gap: 0.75rem; text-align: right; }
+  .contact-link {
+    font-size: 0.8rem; color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: var(--accent); }
+  .contact-badge {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(168,201,127,0.3);
+    background: rgba(168,201,127,0.06);
+    font-size: 0.65rem; color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  footer {
+    padding: 1.25rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 0.62rem; color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero { padding-bottom: 4rem; }
+    .job, .edu-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    .job-period { padding-bottom: 0.5rem; }
+    .contact-section { padding: 3rem 1.5rem; }
+    .contact-details { text-align: left; }
+    footer { padding: 1rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>I</span>shkhan Abroyan</a>
+  <ul class="nav-links">
+    <li><a href="#profiel">Profiel</a></li>
+    <li><a href="#vaardigheden">Vaardigheden</a></li>
+    <li><a href="#ervaring">Ervaring</a></li>
+    <li><a href="#opleiding">Opleiding</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">IA</div>
+  <p class="hero-label">IT Professional · De Pinte, België</p>
+  <h1 class="hero-name">
+    Ishkhan<br><span class="line2">Abroyan</span>
+  </h1>
+  <p class="hero-subtitle">Systeembeheerder &nbsp;·&nbsp; IT Support Specialist &nbsp;·&nbsp; Web Developer</p>
+  <div class="hero-contacts">
+    <div class="hero-contact-item">ishkhan13@gmail.com</div>
+    <div class="hero-contact-item">0488 15 70 66</div>
+    <div class="hero-contact-item">21 Zwaluwlaan, 9840 De Pinte</div>
+    <div class="hero-contact-item">Rijbewijs B</div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- PROFIEL -->
+<section id="profiel">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Profiel</h2>
+    <div class="section-line"></div>
+  </div>
+  <p class="profiel-text">
+    Gemotiveerde <strong>IT-professional</strong> met een brede technische achtergrond in systeembeheer, installatie van besturingssystemen en softwareontwikkeling. Creatieve probleemoplosser met een sterke focus op resultaat en klantvriendelijkheid, vastbesloten zijn vaardigheden als <strong>Systeembeheerder</strong> actief in te zetten.
+  </p>
+  <div class="subsidy-box">
+    IMaatwerksubsidie 40% loonpremie &nbsp;—&nbsp; geldig van 08-07-2025 t/m 07-07-2030
+  </div>
+</section>
+
+<!-- VAARDIGHEDEN -->
+<section id="vaardigheden">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Vaardigheden</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-label">Systemen</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Windows</span>
+        <span class="skill-tag">Installatie</span>
+        <span class="skill-tag">Configuratie</span>
+        <span class="skill-tag">Hardware</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-label">Programmeren</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">PHP</span>
+        <span class="skill-tag">OCPP</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-label">Web</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML5</span>
+        <span class="skill-tag">CSS3</span>
+        <span class="skill-tag">API</span>
+        <span class="skill-tag">SEO</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-label">Talen</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Nederlands B1</span>
+        <span class="skill-tag">Engels</span>
+        <span class="skill-tag">Russisch</span>
+        <span class="skill-tag">Armeens</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ERVARING -->
+<section id="ervaring">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Werkervaring</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="jobs">
+    <div class="job">
+      <div class="job-period">2024 — Heden</div>
+      <div>
+        <div class="job-title">Freelance Softwareontwikkelaar</div>
+        <div class="job-company">evtec Armenia · EV Infrastructure</div>
+        <ul class="job-bullets">
+          <li>Ontwikkeling van software voor EV-laadinfrastructuur via OCPP-protocollen.</li>
+          <li>Bouw van monitoringsystemen voor batterijstatus en efficiëntie.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="job">
+      <div class="job-period">2023 — Heden</div>
+      <div>
+        <div class="job-title">Web Developer (Freelance)</div>
+        <div class="job-company">Eigen projecten · België</div>
+        <ul class="job-bullets">
+          <li>Ontwerp en onderhoud van gebruiksvriendelijke websites (HTML, CSS, JS).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="job">
+      <div class="job-period">2009 — 2010</div>
+      <div>
+        <div class="job-title">Engineer-programmeur</div>
+        <div class="job-company">Orange Armenië</div>
+        <ul class="job-bullets">
+          <li>Onderhoud van systemen, dataopslag en systeemtesten.</li>
+          <li>Technische documentatie opstellen.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="job">
+      <div class="job-period">2005 — 2009</div>
+      <div>
+        <div class="job-title">Klantenservicecoördinator</div>
+        <div class="job-company">Baron LLC</div>
+        <ul class="job-bullets">
+          <li>Technische ondersteuning en prestatie-analyse.</li>
+          <li>Klachtenbehandeling en klantenopvolging.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TALEN DETAIL -->
+<section id="talen">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Talenkennis</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="langs-grid">
+    <div class="lang-card">
+      <div class="lang-name">Nederlands</div>
+      <div class="lang-level">B1 — Threshold</div>
+      <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="60"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-name">Engels</div>
+      <div class="lang-level">Goed</div>
+      <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="75"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-name">Russisch</div>
+      <div class="lang-level">Goed</div>
+      <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="75"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-name">Armeens</div>
+      <div class="lang-level">Moedertaal</div>
+      <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="100"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OPLEIDING -->
+<section id="opleiding">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Opleiding</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-list">
+    <div class="edu-item">
+      <div class="edu-year">2026</div>
+      <div>
+        <div class="edu-name">NT2 Threshold 4 (B1)</div>
+        <div class="edu-inst">CVO Groeipunt</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2023</div>
+      <div>
+        <div class="edu-name">Digital Sprint — IT & Agile</div>
+        <div class="edu-inst">BeCode Gent</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2007 – 2010</div>
+      <div>
+        <div class="edu-name">ICT / C++ Programmering</div>
+        <div class="edu-inst">Fes House</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">4 jaar</div>
+      <div>
+        <div class="edu-name">Hoger Onderwijs Filologie</div>
+        <div class="edu-inst">Armeense Staatsuniversiteit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div>
+    <h2 class="contact-heading">Neem<br><span>contact</span><br>op.</h2>
+  </div>
+  <div class="contact-details">
+    <a class="contact-link" href="mailto:ishkhan13@gmail.com">ishkhan13@gmail.com</a>
+    <a class="contact-link" href="tel:0488157066">0488 15 70 66</a>
+    <span class="contact-link">21 Zwaluwlaan, 9840 De Pinte</span>
+    <div class="contact-badge">Rijbewijs B — 16 jaar ervaring</div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Ishkhan Abroyan</span>
+  <span>IT Professional · De Pinte, België</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width = '50px'; ring.style.height = '50px'; });
+    el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; });
+  });
+
+  // Scroll reveal for jobs
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 100);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.job').forEach(j => obs.observe(j));
+
+  // Language bars animate on scroll
+  const barObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.lang-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.langs-grid').forEach(g => {
+    g.querySelectorAll('.lang-bar-fill').forEach(b => b.style.width = '0');
+    barObs.observe(g);
+  });
+</script>
+</body>
+</html>
