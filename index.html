@@ -489,4 +489,22 @@ nav{
 const jObs=new IntersectionObserver(es=>es.forEach((e,i)=>{
   if(e.isIntersecting)setTimeout(()=>e.target.classList.add('in'),i*80)
 }),{threshold:.08});
-document.querySelectorAll('.job').forEach(el=
+document.querySelectorAll('.job').forEach(el=>jObs.observe(el));
+
+const lcards=document.querySelectorAll('.lcard');
+lcards.forEach(c=>{c.style.setProperty('--sc',0);c.style.setProperty('--pct','0%')});
+const lObs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    lcards.forEach(c=>{
+      c.style.setProperty('--sc',c.dataset.sc);
+      c.style.setProperty('--pct',c.dataset.pct);
+      c.classList.add('in');
+    });
+    lObs.disconnect();
+  }
+}),{threshold:.2});
+const lg=document.getElementById('lgrid');
+if(lg)lObs.observe(lg);
+</script>
+</body>
+</html>
